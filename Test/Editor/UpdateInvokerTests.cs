@@ -33,19 +33,6 @@ namespace Tweening.Test.Editor
             updatable = null;
         }
         
-        [Test]
-        public void Updater_HandlesTwiceAdded_Updatable()
-        {
-            updateInvoker.Add(updatable);
-            updateInvoker.Add(updatable);
-        }
-
-        [Test]
-        public void Updater_HandlesTwiceRemoved_Updatable()
-        {
-            updateInvoker.Remove(updatable);
-            updateInvoker.Remove(updatable);
-        }
 
         [Test]
         public void Updater_Updates_Object()
