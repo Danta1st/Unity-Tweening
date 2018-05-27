@@ -36,6 +36,7 @@ namespace Tweening.Model
 
         public ITweener<T> Start(T from, T to, Action<T> onProgress, Action onComplete)
         {
+            step = 0f;
             data = new Data<T>(from, to);
             onProgressAction = onProgress;
             onCompleteAction = onComplete;
