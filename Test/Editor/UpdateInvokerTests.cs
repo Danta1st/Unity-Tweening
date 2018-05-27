@@ -6,48 +6,48 @@ namespace Tweening.Test.Editor
     [TestFixture]
     public class UpdateInvokerTests
     {
-        private class Updatable : IUpdatable
+        private class MockUpdatable : IUpdatable
         {
             public int UpdateCount;
 
-            public void Update()
+            public void Update(float deltaTime)
             {
                 UpdateCount++;
             }
         }
 
         private IUpdateInvoker updateInvoker;
-        private Updatable updatable;
+        private MockUpdatable mockUpdatable;
 
         [SetUp]
         public void Setup()
         {
             updateInvoker = new UpdateInvoker();
-            updatable = new Updatable();
+            mockUpdatable = new MockUpdatable();
         }
 
         [TearDown]
         public void TearDown()
         {
             updateInvoker = null;
-            updatable = null;
+            mockUpdatable = null;
         }
         
 
         [Test]
         public void Updater_Updates_Object()
         {
-            updateInvoker.Add(updatable);
+            updateInvoker.Add(mockUpdatable);
             updateInvoker.Update();
             
-            Assert.AreEqual(1, updatable.UpdateCount);
+            Assert.AreEqual(1, mockUpdatable.UpdateCount);
         }
         
         [Test]
         public void Updater_DoesNotFail_OnNulledObject()
         {
-            updateInvoker.Add(updatable);
-            updatable = null;
+            updateInvoker.Add(mockUpdatable);
+            mockUpdatable = null;
             updateInvoker.Update();
         }
     }

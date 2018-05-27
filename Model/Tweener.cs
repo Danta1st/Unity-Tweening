@@ -60,9 +60,9 @@ namespace Tweening.Model
             onCompleteAction = null;
         }
 
-        public void Update()
+        public void Update(float deltaTime)
         {
-            step += Time.deltaTime / duration;
+            step += deltaTime / duration;
             step = Mathf.Clamp01(step);
 
             var evaluation = animationCurve.Evaluate(step);
