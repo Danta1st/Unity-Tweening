@@ -6,12 +6,12 @@ namespace Tweening.Model
 {
     public abstract class Tweener<T> : ITweener<T>, IUpdatable
     {
-        private readonly IUpdateInvoker updateInvoker;
-
-        public Tweener()
+        protected Tweener()
         {
             updateInvoker = UpdateInvokerFactory.GetDefault();
         }
+
+        private readonly IUpdateInvoker updateInvoker;
 
         private float step;
         private Data<T> data;
@@ -19,16 +19,17 @@ namespace Tweening.Model
         private Action onCompleteAction;
         
         private float duration = 0.4f;
+        private IEasingEquation easingEquation = Easings.SineInOut;
+
         public ITweener<T> OverSeconds(float duration)
         {
             this.duration = duration;
             return this;
         }
 
-        private AnimationCurve animationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-        public ITweener<T> EvaluatedBy(AnimationCurve animationCurve)
+        public ITweener<T> EvaluatedBy(IEasingEquation evaluator)
         {
-            this.animationCurve = animationCurve;
+            easingEquation = evaluator;
             return this;
         }
 
@@ -66,7 +67,7 @@ namespace Tweening.Model
             step += deltaTime / duration;
             step = Mathf.Clamp01(step);
 
-            var evaluation = animationCurve.Evaluate(step);
+            var evaluation = easingEquation.Evaluate(step);
             var result = GetLerpValue(data, evaluation);
 
             onProgressAction.Invoke(result);

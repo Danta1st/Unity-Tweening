@@ -25,6 +25,6 @@ namespace Tweening.Model
 
         ITweener<T> OverSeconds(float duration);
         
-        ITweener<T> EvaluatedBy(AnimationCurve animationCurve);
+        ITweener<T> EvaluatedBy(IEasingEquation easingEquation);
     }
 }
