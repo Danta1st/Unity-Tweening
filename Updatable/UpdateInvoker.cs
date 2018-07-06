@@ -10,32 +10,38 @@ namespace Tweening.Updatable
         private readonly Stopwatch stopwatch = new Stopwatch();
         private readonly List<IUpdatable> updatables = new List<IUpdatable>();
 
-        private readonly Queue<IUpdatable> addQueue = new Queue<IUpdatable>();
-        private readonly Queue<IUpdatable> removeQueue = new Queue<IUpdatable>();
+        private readonly List<IUpdatable> addQueue = new List<IUpdatable>();
+        private readonly List<IUpdatable> removeQueue = new List<IUpdatable>();
 
 
         public void Add(IUpdatable updatable)
         {
             if(addQueue.Contains(updatable))
                 return;
+
+            if (removeQueue.Contains(updatable))
+                removeQueue.Remove(updatable);
             
-            addQueue.Enqueue(updatable);
+            addQueue.Add(updatable);
         }
 
         public void Remove(IUpdatable updatable)
         {
             if(removeQueue.Contains(updatable))
                 return;
+
+            if (addQueue.Contains(updatable))
+                addQueue.Remove(updatable);
             
-            removeQueue.Enqueue(updatable);
+            removeQueue.Add(updatable);
         }
         
         public void Update()
         {
             ExpediteRemoveRequests();
-            
-            ExpediteAddRequests();
 
+            ExpediteAddRequests();
+            
             InvokeUpdateCalls();
         }
 

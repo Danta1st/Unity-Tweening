@@ -22,8 +22,8 @@ namespace Tweening.Test.Editor
         [SetUp]
         public void Setup()
         {
-            updateInvoker = new UpdateInvoker();
             mockUpdatable = new MockUpdatable();
+            updateInvoker = new UpdateInvoker();
         }
 
         [TearDown]
@@ -35,7 +35,7 @@ namespace Tweening.Test.Editor
         
 
         [Test]
-        public void Updater_Updates_Object()
+        public void Add_StartsInvication_Immediately()
         {
             updateInvoker.Add(mockUpdatable);
             updateInvoker.Update();
@@ -44,11 +44,83 @@ namespace Tweening.Test.Editor
         }
         
         [Test]
-        public void Updater_DoesNotFail_OnNulledObject()
+        public void Remove_StopsInvocation_Immediately()
         {
             updateInvoker.Add(mockUpdatable);
-            mockUpdatable = null;
             updateInvoker.Update();
+            
+            updateInvoker.Remove(mockUpdatable);
+            updateInvoker.Update();
+            
+            Assert.AreEqual(1, mockUpdatable.UpdateCount);
         }
+
+        [Test]
+        public void Remove_NotAddedItem_DoesNotThrowException()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                updateInvoker.Remove(mockUpdatable);
+                updateInvoker.Update();
+            });
+        }
+
+        
+        [Test]
+        public void MultipleAdd_IsOnlyInvokedOnce()
+        {
+            updateInvoker.Add(mockUpdatable);
+            updateInvoker.Add(mockUpdatable);
+            updateInvoker.Update();
+            
+            Assert.AreEqual(1, mockUpdatable.UpdateCount);
+            
+            updateInvoker.Add(mockUpdatable);
+            updateInvoker.Update();
+            
+            Assert.AreEqual(2, mockUpdatable.UpdateCount);
+        }
+        
+        
+        [Test]
+        public void MultipleRemove_IsNotInvoked()
+        {
+            updateInvoker.Add(mockUpdatable);
+            updateInvoker.Update();
+            
+            //Ensure the added object is in the update queue
+            Assert.AreEqual(1, mockUpdatable.UpdateCount);
+            
+            updateInvoker.Remove(mockUpdatable);
+            updateInvoker.Remove(mockUpdatable);
+            updateInvoker.Update();
+            
+            Assert.AreEqual(1, mockUpdatable.UpdateCount);
+        }
+        
+        [Test]
+        public void AddRemove_WithinSameFrame_DoesNotCauseInvocation()
+        {
+            updateInvoker.Add(mockUpdatable);
+            updateInvoker.Remove(mockUpdatable);
+            updateInvoker.Update();
+            
+            Assert.AreEqual(0, mockUpdatable.UpdateCount);
+        }
+        
+        [Test]
+        public void RemoveAdd_WithinSameFrame_DoesCauseInvocation()
+        {
+            updateInvoker.Remove(mockUpdatable);
+            updateInvoker.Add(mockUpdatable);
+            updateInvoker.Update();
+            
+            Assert.AreEqual(1, mockUpdatable.UpdateCount);
+            
+            updateInvoker.Update();
+            
+            Assert.AreEqual(2, mockUpdatable.UpdateCount);
+        }
+        
     }
 }

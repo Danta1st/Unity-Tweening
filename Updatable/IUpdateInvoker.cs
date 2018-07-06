@@ -9,7 +9,7 @@ namespace Tweening.Updatable
         void Add(IUpdatable updatable);
         
         /// <summary>
-        /// Removed an updatable from the list
+        /// Removes an updatable from the list. The Updatable is no longer updated effective immediately.
         /// </summary>
         /// <param name="updatable"></param>
         void Remove(IUpdatable updatable);
