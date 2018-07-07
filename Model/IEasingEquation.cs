@@ -101,7 +101,7 @@ namespace Tweening.Model
 		public float Evaluate(float step)
 		{
 			var f = step - 1f;
-			return step * step * step * (1 - step) + 1f;
+			return f * f * f * (1 - step) + 1f;
 		}
 	}
 
