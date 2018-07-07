@@ -74,6 +74,9 @@ namespace Tweening.Updatable
         private void InvokeUpdateCalls()
         {
             var deltaTime = stopwatch.ElapsedMilliseconds * 0.001f;
+            stopwatch.Reset();
+            stopwatch.Start();
+            
             foreach (var updatable in updatables)
             {
                 if (updatable == null)
@@ -81,9 +84,6 @@ namespace Tweening.Updatable
 
                 updatable.Update(deltaTime);
             }
-
-            stopwatch.Reset();
-            stopwatch.Start();
         }
     }
 }
